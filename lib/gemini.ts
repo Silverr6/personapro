@@ -1,9 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// The Gemini model to use. gemini-1.5-flash is on the generous free tier.
-// If you hit a "model not found" error, swap to "gemini-2.0-flash" or check
-// https://ai.google.dev/gemini-api/docs/models for the current free model name.
-const MODEL = "gemini-1.5-flash";
+// The Gemini model to use. "gemini-flash-latest" is a stable alias that always
+// points to Google's current free-tier Flash model, so it won't 404 when a
+// specific dated model is retired. Pin to e.g. "gemini-2.5-flash" if you want a
+// fixed version. See https://ai.google.dev/gemini-api/docs/models for the list.
+const MODEL = "gemini-flash-latest";
 
 const LANG_NAMES: Record<string, string> = {
   en: "English",
