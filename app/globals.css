@@ -3,16 +3,22 @@
 @tailwind utilities;
 
 :root {
-  --ink: #0f172a;
-  --ink2: #1e293b;
-  --card: #334155;
-  --indigo: #6366f1;
-  --indigo-light: #818cf8;
-  --mint: #10b981;
-  --mint-light: #34d399;
-  --text: #f1f5f9;
-  --text-muted: #94a3b8;
-  --text-dim: #64748b;
+  /* Neo-brutalist "career glow-up" tokens */
+  --paper: #fbf7ec;
+  --paper-2: #f2ead7;
+  --ink: #15130e;
+  --ink-soft: #4a4534;
+  --cobalt: #2d4cff;
+  --cobalt-soft: #a9b7ff;
+  --lime: #c6f24e;
+  --lime-soft: #e6fab0;
+  --coral: #ff5b3a;
+  --coral-soft: #ffc2b4;
+  --lilac: #b79cff;
+
+  --shadow: 5px 5px 0 0 var(--ink);
+  --shadow-sm: 3px 3px 0 0 var(--ink);
+  --shadow-press: 2px 2px 0 0 var(--ink);
 }
 
 * {
@@ -23,84 +29,174 @@ html,
 body {
   padding: 0;
   margin: 0;
-  background: var(--ink);
-  color: var(--text);
-  font-family: "Sora", system-ui, -apple-system, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: "DM Sans", system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
+/* Subtle paper grain / dotted texture so the background isn't a flat AI gradient */
+body {
+  background-image: radial-gradient(var(--paper-2) 1.4px, transparent 1.4px);
+  background-size: 22px 22px;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: "Space Grotesk", system-ui, sans-serif;
+  letter-spacing: -0.02em;
+}
+
 ::selection {
-  background: rgba(99, 102, 241, 0.35);
+  background: var(--lime);
+  color: var(--ink);
 }
 
 /* Scrollbars */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 12px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--ink);
+  background: var(--paper-2);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(99, 102, 241, 0.35);
-  border-radius: 4px;
+  background: var(--ink);
+  border: 3px solid var(--paper-2);
+  border-radius: 0;
 }
 
-/* Inputs */
 input,
 textarea {
   font-family: inherit;
 }
-input:focus,
-textarea:focus {
-  outline: none;
-  border-color: var(--indigo) !important;
+
+/* ---------- Neo-brutalist building blocks ---------- */
+
+.nb-border {
+  border: 2.5px solid var(--ink);
 }
 
-/* Animations */
+.nb-card {
+  background: #fff;
+  border: 2.5px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+.nb-shadow {
+  box-shadow: var(--shadow);
+}
+.nb-shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+/* RTL: flip the hard shadow to the opposite side so depth reads correctly */
+[dir="rtl"] .nb-card,
+[dir="rtl"] .nb-shadow {
+  box-shadow: -5px 5px 0 0 var(--ink);
+}
+[dir="rtl"] .nb-shadow-sm {
+  box-shadow: -3px 3px 0 0 var(--ink);
+}
+
+/* Tactile press for clickable surfaces */
+.nb-press {
+  transition: transform 0.08s ease, box-shadow 0.08s ease;
+}
+.nb-press:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 6px 6px 0 0 var(--ink);
+}
+.nb-press:active {
+  transform: translate(3px, 3px);
+  box-shadow: var(--shadow-press);
+}
+[dir="rtl"] .nb-press:hover {
+  transform: translate(1px, -1px);
+  box-shadow: -6px 6px 0 0 var(--ink);
+}
+[dir="rtl"] .nb-press:active {
+  box-shadow: -2px 2px 0 0 var(--ink);
+}
+
+.nb-input {
+  width: 100%;
+  background: #fff;
+  border: 2.5px solid var(--ink);
+  border-radius: 12px;
+  padding: 13px 16px;
+  font-size: 15px;
+  color: var(--ink);
+  transition: box-shadow 0.12s ease, transform 0.12s ease;
+}
+.nb-input::placeholder {
+  color: var(--ink-soft);
+  opacity: 0.65;
+}
+.nb-input:focus {
+  outline: none;
+  box-shadow: var(--shadow-sm);
+  transform: translate(-1px, -1px);
+}
+[dir="rtl"] .nb-input:focus {
+  box-shadow: -3px 3px 0 0 var(--ink);
+  transform: translate(1px, -1px);
+}
+
+/* Eyebrow / kicker label */
+.nb-kicker {
+  font-family: "Space Mono", monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ---------- Animations ---------- */
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
 }
 @keyframes pulse {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.5;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
 }
-@keyframes float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-14px);
-  }
+@keyframes pop {
+  0% { transform: scale(0.9); }
+  60% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.15; }
 }
 
-.fade-up {
-  animation: fadeUp 0.5s ease-out;
-}
-.spin {
-  animation: spin 1s linear infinite;
-}
-.float-orb {
-  animation: float 8s ease-in-out infinite;
+.fade-up { animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.spin { animation: spin 0.9s linear infinite; }
+.pop { animation: pop 0.3s cubic-bezier(0.22, 1, 0.36, 1) both; }
+.marquee-track { animation: marquee 22s linear infinite; }
+.blink { animation: blink 1.1s steps(2, start) infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+  .marquee-track { animation: none; }
 }
 
 [dir="rtl"] {
   text-align: right;
+}
+
+/* Flip directional (next / reload) arrows in RTL */
+[dir="rtl"] .rtl-flip {
+  transform: scaleX(-1);
 }

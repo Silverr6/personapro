@@ -13,59 +13,64 @@ export default function ScoreRing({
   const circumference = 2 * Math.PI * radius;
   const pct = Math.max(0, Math.min(100, score));
   const offset = circumference - (pct / 100) * circumference;
-  const color = pct >= 75 ? "#34D399" : pct >= 50 ? "#FBBF24" : "#F87171";
+  // Band colors: strong = lime, decent = cobalt, needs work = coral
+  const color = pct >= 75 ? "#C6F24E" : pct >= 50 ? "#2D4CFF" : "#FF5B3A";
+  const verdict = pct >= 75 ? "Strong" : pct >= 50 ? "Getting there" : "Needs work";
 
   const bars = [
-    { key: "formatting", label: "Formatting", val: breakdown.formatting },
-    { key: "content", label: "Content", val: breakdown.content },
-    { key: "impact", label: "Impact", val: breakdown.impact },
-    { key: "keywords", label: "Keywords", val: breakdown.keywords },
+    { key: "formatting", label: "Formatting", val: breakdown.formatting, fill: "#2D4CFF" },
+    { key: "content", label: "Content", val: breakdown.content, fill: "#FF5B3A" },
+    { key: "impact", label: "Impact", val: breakdown.impact, fill: "#B79CFF" },
+    { key: "keywords", label: "Keywords", val: breakdown.keywords, fill: "#C6F24E" },
   ];
 
   return (
-    <div className="rounded-2xl bg-white/[0.03] border border-white/[0.06] p-6 mb-5 flex flex-col sm:flex-row items-center gap-8">
-      <div className="relative shrink-0" style={{ width: 130, height: 130 }}>
-        <svg width="130" height="130" className="-rotate-90">
-          <circle cx="65" cy="65" r={radius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="10" />
+    <div className="nb-card p-5 sm:p-6 mb-5 flex flex-col sm:flex-row items-center gap-7">
+      <div className="relative shrink-0" style={{ width: 138, height: 138 }}>
+        <svg width="138" height="138" className="-rotate-90 overflow-visible">
+          <circle cx="69" cy="69" r={radius} fill="#fff" stroke="#15130E" strokeWidth="3" />
+          <circle cx="69" cy="69" r={radius} fill="none" stroke="rgba(21,19,14,0.10)" strokeWidth="13" />
           <circle
-            cx="65"
-            cy="65"
+            cx="69"
+            cy="69"
             r={radius}
             fill="none"
             stroke={color}
-            strokeWidth="10"
-            strokeLinecap="round"
+            strokeWidth="13"
+            strokeLinecap="butt"
             strokeDasharray={circumference}
             strokeDashoffset={offset}
-            style={{ transition: "stroke-dashoffset 1s ease-out" }}
+            style={{ transition: "stroke-dashoffset 1.1s cubic-bezier(0.22,1,0.36,1)" }}
           />
+          <circle cx="69" cy="69" r={radius + 6.5} fill="none" stroke="#15130E" strokeWidth="2.5" />
+          <circle cx="69" cy="69" r={radius - 6.5} fill="none" stroke="#15130E" strokeWidth="2.5" />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-4xl font-bold" style={{ color }}>
-            {pct}
-          </span>
-          <span className="text-xs text-[var(--text-dim)] font-mono">/ 100</span>
+          <span className="font-display text-5xl font-bold text-ink leading-none pop">{pct}</span>
+          <span className="nb-kicker text-ink/50 mt-1">/ 100</span>
         </div>
       </div>
 
       <div className="flex-1 w-full">
-        <h3 className="text-sm font-bold text-[var(--indigo-light)] uppercase tracking-wide font-mono mb-4">
-          {label}
-        </h3>
+        <div className="flex items-center justify-between gap-2 mb-4">
+          <span className="nb-kicker text-ink bg-lime nb-border rounded-md px-2.5 py-1">{label}</span>
+          <span className="text-xs font-bold nb-border rounded-md px-2.5 py-1 bg-white text-ink">{verdict}</span>
+        </div>
         <div className="space-y-3">
           {bars.map((b) => (
             <div key={b.key}>
-              <div className="flex justify-between text-xs text-[var(--text-muted)] mb-1">
+              <div className="flex justify-between text-xs font-bold text-ink/80 mb-1">
                 <span>{b.label}</span>
                 <span className="font-mono">{b.val}</span>
               </div>
-              <div className="h-1.5 rounded-full bg-white/10 overflow-hidden">
+              <div className="h-3.5 rounded-md nb-border bg-white overflow-hidden">
                 <div
-                  className="h-full rounded-full"
+                  className="h-full"
                   style={{
                     width: `${Math.max(0, Math.min(100, b.val))}%`,
-                    background: "linear-gradient(90deg, #6366F1, #34D399)",
-                    transition: "width 1s ease-out",
+                    background: b.fill,
+                    borderRight: "2.5px solid #15130E",
+                    transition: "width 1.1s cubic-bezier(0.22,1,0.36,1)",
                   }}
                 />
               </div>

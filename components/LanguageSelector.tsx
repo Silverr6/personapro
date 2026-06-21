@@ -10,7 +10,7 @@ export default function LanguageSelector({
   onChange: (l: Lang) => void;
 }) {
   return (
-    <div className="flex gap-1.5">
+    <div className="flex items-center gap-1 nb-border bg-white rounded-nb p-1 nb-shadow-sm">
       {(Object.keys(LANGUAGES) as Lang[]).map((code) => {
         const active = lang === code;
         return (
@@ -18,13 +18,15 @@ export default function LanguageSelector({
             key={code}
             onClick={() => onChange(code)}
             title={LANGUAGES[code].label}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all border ${
+            aria-label={LANGUAGES[code].label}
+            aria-pressed={active}
+            className={`cursor-pointer px-2.5 py-1 rounded-[9px] text-xs font-bold uppercase tracking-wide transition-colors duration-150 ${
               active
-                ? "border-[var(--indigo)] bg-[rgba(99,102,241,0.15)] text-[var(--indigo-light)]"
-                : "border-white/10 bg-white/5 text-[var(--text-dim)] hover:text-[var(--text-muted)]"
+                ? "bg-ink text-paper"
+                : "text-ink/55 hover:text-ink hover:bg-paper-2"
             }`}
           >
-            {LANGUAGES[code].flag}
+            {code}
           </button>
         );
       })}

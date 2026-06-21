@@ -23,13 +23,13 @@ export default function UploadZone({
     try {
       const text = await parseFile(file);
       if (!text || text.length < 20) {
-        onError("Could not read enough text from that file. Try pasting the text instead.");
+        onError("Couldn't pull enough text from that file — try pasting it below instead.");
         setFileName(null);
       } else {
         onParsed(text, file.name);
       }
     } catch (e: any) {
-      onError(e?.message || "Could not read that file.");
+      onError(e?.message || "Couldn't read that file.");
       setFileName(null);
     } finally {
       setLoading(false);
@@ -52,11 +52,15 @@ export default function UploadZone({
       onDragLeave={() => setDragging(false)}
       onDrop={onDrop}
       onClick={() => inputRef.current?.click()}
-      className={`cursor-pointer rounded-xl border-2 border-dashed p-6 text-center transition-all ${
-        dragging
-          ? "border-[var(--indigo)] bg-[rgba(99,102,241,0.08)]"
-          : "border-white/15 bg-white/[0.02] hover:border-white/30"
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") inputRef.current?.click();
+      }}
+      className={`cursor-pointer rounded-nb nb-border p-6 text-center transition-colors duration-150 ${
+        dragging ? "bg-lime" : fileName && !loading ? "bg-lime-soft" : "bg-white hover:bg-paper-2"
       }`}
+      style={{ borderStyle: fileName ? "solid" : "dashed" }}
     >
       <input
         ref={inputRef}
@@ -69,16 +73,40 @@ export default function UploadZone({
         }}
       />
       {loading ? (
-        <p className="text-sm text-[var(--text-muted)]">Reading {fileName}...</p>
+        <p className="text-sm font-medium text-ink">Reading {fileName}…</p>
       ) : fileName ? (
-        <p className="text-sm text-[var(--mint-light)]">✓ {fileName} loaded</p>
+        <p className="text-sm font-bold text-ink flex items-center justify-center gap-2">
+          <CheckIcon /> {fileName} — locked in
+        </p>
       ) : (
         <>
-          <div className="text-2xl mb-2">📄</div>
-          <p className="text-sm text-[var(--text-muted)]">{hint}</p>
-          <p className="text-xs text-[var(--text-dim)] mt-1">PDF · DOCX · TXT</p>
+          <div className="flex justify-center mb-2.5">
+            <span className="inline-flex items-center justify-center w-11 h-11 rounded-xl bg-cobalt nb-border nb-shadow-sm">
+              <UploadIcon />
+            </span>
+          </div>
+          <p className="text-sm font-bold text-ink">{hint}</p>
+          <p className="nb-kicker text-ink/50 mt-1.5">PDF · DOCX · TXT</p>
         </>
       )}
     </div>
+  );
+}
+
+function UploadIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#FBF7EC" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M12 16V4" />
+      <path d="m6 10 6-6 6 6" />
+      <path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" />
+    </svg>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#15130E" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20 6 9 17l-5-5" />
+    </svg>
   );
 }
